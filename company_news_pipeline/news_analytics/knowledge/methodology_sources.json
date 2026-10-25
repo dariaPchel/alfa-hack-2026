@@ -1,0 +1,100 @@
+{
+  "sources": [
+    {
+      "document_id": "iso-31000",
+      "title": "ISO 31000:2018 Risk management — Guidelines (public-source note)",
+      "source_url": "https://committee.iso.org/standard/31000",
+      "jurisdiction": "International",
+      "applicability": "General risk-management principles; use public description only unless licensed text is supplied",
+      "version": "2018; confirmed in 2023",
+      "license_scope": "Locally stored text is an original summary of the public catalog description; full standard requires licensed copy",
+      "topic": "corporate_risk",
+      "active": true,
+      "content_file": "iso-31000.md"
+    },
+    {
+      "document_id": "coso-erm",
+      "title": "COSO Enterprise Risk Management",
+      "source_url": "https://www.coso.org/enterprise-risk-management",
+      "jurisdiction": "International",
+      "applicability": "Public overview of strategy and performance integration",
+      "version": "Current public page",
+      "license_scope": "Public page only; do not ingest copyrighted framework text",
+      "topic": "corporate_risk",
+      "active": true,
+      "content_file": "coso-erm.md"
+    },
+    {
+      "document_id": "uk-orange-book",
+      "title": "The Orange Book: Management of Risk — Principles and Concepts",
+      "source_url": "https://www.gov.uk/government/publications/orange-book/the-orange-book-management-of-risk-principles-and-concepts",
+      "jurisdiction": "United Kingdom public sector",
+      "applicability": "Methodological reference only; not a rule for Russian companies",
+      "version": "Updated 2026-07-29",
+      "license_scope": "Original summary of the OGL v3.0 publication; preserve attribution and third-party-rights notice",
+      "topic": "corporate_risk",
+      "active": true,
+      "content_file": "uk-orange-book.md"
+    },
+    {
+      "document_id": "uk-green-book-2026",
+      "title": "The Green Book 2026",
+      "source_url": "https://www.gov.uk/government/publications/the-green-book--2/the-green-book-2026",
+      "jurisdiction": "United Kingdom public sector",
+      "applicability": "Scenario and options appraisal structure only; not a business-sector regulation",
+      "version": "2026",
+      "license_scope": "Original summary of the OGL v3.0 publication; preserve attribution and third-party-rights notice",
+      "topic": "decision_analysis",
+      "active": true,
+      "content_file": "uk-green-book-2026.md"
+    },
+    {
+      "document_id": "nist-ai-rmf-1",
+      "title": "NIST AI Risk Management Framework 1.0",
+      "source_url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10",
+      "jurisdiction": "United States; voluntary framework",
+      "applicability": "AI-system governance; not a source of company or industry risk facts",
+      "version": "1.0 (2023)",
+      "license_scope": "Public government publication",
+      "topic": "ai_governance",
+      "active": true,
+      "content_file": "nist-ai-rmf.md"
+    },
+    {
+      "document_id": "nist-genai-profile",
+      "title": "NIST Generative AI Profile",
+      "source_url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+      "jurisdiction": "United States; voluntary framework",
+      "applicability": "Generative-AI governance and controls; not a source of company or industry risk facts",
+      "version": "2024",
+      "license_scope": "Public government publication",
+      "topic": "ai_governance",
+      "active": true,
+      "content_file": "nist-genai-profile.md"
+    },
+    {
+      "document_id": "federal-reserve-sr-26-2",
+      "title": "Federal Reserve SR 26-2: Revised Model Risk Management Guidance",
+      "source_url": "https://www.federalreserve.gov/supervisionreg/srletters/sr2602.htm",
+      "jurisdiction": "United States banking supervision",
+      "applicability": "Bank model-risk governance only; not a universal business-risk standard",
+      "version": "2026",
+      "license_scope": "Public government supervisory letter",
+      "topic": "model_governance",
+      "active": true,
+      "content_file": "federal-reserve-sr-26-2.md"
+    },
+    {
+      "document_id": "federal-reserve-sr-11-7",
+      "title": "Federal Reserve SR 11-7 (superseded)",
+      "source_url": "https://www.federalreserve.gov/supervisionreg/srletters/sr1107.htm",
+      "jurisdiction": "United States banking supervision",
+      "applicability": "Historical context only; superseded by SR 26-2",
+      "version": "2011 (superseded)",
+      "license_scope": "Public government supervisory letter",
+      "topic": "model_governance",
+      "active": false,
+      "content_file": "federal-reserve-sr-11-7.md"
+    }
+  ]
+}
