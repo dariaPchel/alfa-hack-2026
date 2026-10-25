@@ -1,0 +1,809 @@
+/* ===== IMPORT FONT ===== */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+:root {
+  --menu-h: 56px;
+}
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f0f0f3;
+  color: #1a1a1a;
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== HEADER ===== */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px 12px;
+  background: #f0f0f3;
+}
+
+.company-logo {
+  width: 42px;
+  height: 42px;
+  background: #ef3124;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.company-selector {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  transition: box-shadow 0.2s;
+}
+
+.company-selector:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.company-selector-name {
+  flex: 1;
+  text-align: left;
+}
+
+.company-selector-arrow {
+  color: #999;
+  font-size: 12px;
+}
+
+/* ===== BALANCE ROW ===== */
+.balance-row {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px 16px;
+}
+
+.balance-row.single {
+  max-width: 260px;
+}
+
+.balance-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  min-height: 100px;
+  border: none;
+}
+
+.balance-label {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.balance-value-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.balance-value {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  flex: 1;
+}
+
+.balance-value-main {
+  font-size: 18px;
+  font-weight: 800;
+  font-family: 'Manrope', sans-serif;
+  line-height: 1.2;
+}
+
+.balance-value-decimal {
+  font-size: 18px;
+  font-weight: 400;
+  font-family: 'Manrope', sans-serif;
+  line-height: 1.2;
+  color: #1a1a1a;
+}
+
+.balance-ruble-icon {
+  width: 22px;
+  height: 22px;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+.balance-pointer {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.balance-card:hover .balance-pointer {
+  opacity: 1;
+}
+
+.balance-sub {
+  font-size: 12px;
+  color: #999;
+  margin-top: 6px;
+  font-weight: 500;
+}
+/* ===== SECTION ===== */
+.section {
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.section-link {
+  font-size: 14px;
+  color: #797979;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* ===== ACCOUNT CARD ===== */
+.account-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: transparent;
+  padding: 12px 0;
+  margin-bottom: 4px;
+}
+
+.account-ruble-icon {
+  width: 27px;
+  height: 27px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 300;
+  flex-shrink: 0;
+}
+
+.account-info {
+  flex: 1;
+}
+
+.account-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-size: 16px;
+}
+
+.account-amount-main {
+  font-weight: 700;
+}
+
+.account-amount-decimal {
+  font-weight: 400;
+}
+
+.account-type {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.account-card-img {
+  width: 52px;
+  height: 34px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+/* ===== NEWS ITEM ===== */
+.news-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  align-items: flex-start;
+}
+
+.news-item:hover {
+  opacity: 0.7;
+}
+
+.news-item:last-child {
+  border-bottom: none;
+}
+
+.news-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.news-icon.cb {
+  background: #e8e8e8;
+  color: #555;
+  font-size: 18px;
+}
+
+.news-icon.industry {
+  background: #1565c0;
+  color: #fff;
+}
+
+.news-text {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.news-time {
+  font-size: 12px;
+  color: #aaa;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* ===== TASK CARD ===== */
+.task-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.task-icon {
+  width: 42px;
+  height: 42px;
+  background: #f0f0f3;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.task-icon-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.task-info {
+  flex: 1;
+}
+
+.task-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.task-sub {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.task-badge {
+  width: 24px;
+  height: 24px;
+  background: #fde8e8;  /* светло-розовый фон */
+  color: #ef3124;       /* красная цифра */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ===== DASHBOARD LAYOUT ===== */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;   /* корректно на мобильных браузерах */
+}
+
+/* ===== TASKS BLOCK ===== */
+.tasks-block {
+  flex: 1;              /* тянется до низа экрана, серых просветов нет */
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  margin-top: 8px;
+  padding: 20px 20px calc(var(--menu-h) + env(safe-area-inset-bottom) + 16px);
+}
+
+/* ===== BOTTOM MENU (фиксированное) ===== */
+.bottom-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;       /* центрирует при max-width */
+  width: 100%;
+  max-width: 430px;
+  height: calc(var(--menu-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-top: 1px solid #eee;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 100;
+}
+
+/* ===== CHAT SCREEN ===== */
+.chat-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #fff;
+  font-family: 'Manrope', sans-serif;
+}
+
+/* ===== CHAT HEADER ===== */
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+  background: #fff;
+}
+
+.chat-header-logo {
+  height: 34px;
+  object-fit: contain;
+}
+
+.chat-close {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  background: #f5f5f7;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 18px;
+  transition: background 0.2s, color 0.2s;
+  padding: 0;
+}
+
+.chat-close:hover {
+  background: #e8e8e8;
+  color: #333;
+}
+.chat-header-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #ef3124;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== MESSAGE BUBBLE ===== */
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-wrapper.user {
+  align-items: flex-end;
+}
+
+.message-wrapper.bot {
+  align-items: flex-start;
+}
+
+.message-bubble {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+  font-family: 'Manrope', sans-serif;
+}
+
+.message-bubble.user {
+  background: #1a1a1a;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.message-bubble.bot {
+  background: #f5f5f7;
+  color: #1a1a1a;
+  border-bottom-left-radius: 4px;
+}
+
+/* Время и источник на одной строке */
+.message-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  padding: 0 4px;
+  font-size: 11px;
+  color: #aaa;
+}
+
+.message-time {
+  font-size: 11px;
+  color: #aaa;
+}
+
+.message-source {
+  font-size: 11px;
+  color: #aaa;
+}
+/* ===== SUGGESTED PROMPTS ===== */
+.suggested-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 0;
+}
+
+.prompt-btn {
+  background: #1E1E1E;
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 10px 14px;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+  line-height: 1.35;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  align-self: flex-start;
+  max-width: 85%;
+}
+
+.prompt-btn:hover {
+  background: #333;
+}
+/* ===== TASKS BLOCK (единый белый блок) ===== */
+.tasks-block-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  font-family: 'Manrope', sans-serif;
+}
+
+.tasks-block .task-card {
+  background: #fff;
+  box-shadow: none;
+  border-radius: 12px;
+  padding: 16px 0;
+}
+/* ===== CHAT INPUT ===== */
+.chat-input-wrapper {
+  padding: 12px 20px 20px;
+  background: #fff;
+}
+
+.chat-input-box {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 28px;
+  padding: 8px 8px 8px 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);  /* было 0.12, стало 0.18 + больше размытие */
+  gap: 10px;
+}
+
+.chat-input-skrepka {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.chat-input-skrepka:hover {
+  opacity: 0.8;
+}
+
+.chat-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-family: 'Manrope', sans-serif;
+  color: #1a1a1a;
+  background: transparent;
+}
+
+.chat-input::placeholder {
+  color: #bbb;
+}
+
+.chat-input-send {
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+  transition: opacity 0.2s;
+}
+
+.chat-input-send-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.chat-send {
+  width: 42px;
+  height: 42px;
+  background: #ef3124;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.chat-send:hover {
+  background: #d42a1f;
+}
+/* ===== HEADER (обновлено) ===== */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px 12px;
+  background: #f0f0f3;
+}
+
+.company-logo-img {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+
+.company-selector {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border: none;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  transition: box-shadow 0.2s;
+}
+
+.company-selector:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.company-selector-name {
+  flex: 1;
+  text-align: left;
+}
+
+.selector-arrow {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s;
+  filter: brightness(1.6);
+}
+
+.selector-arrow.rotated {
+  transform: rotate(180deg);
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  max-width: 280px;
+  margin-top: 6px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  z-index: 200;
+  overflow: hidden;
+}
+
+.dropdown-item {
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid #f0f0f0;
+  font-family: 'Manrope', sans-serif;
+  transition: background 0.15s;
+}
+
+.dropdown-item:hover {
+  background: #f9f9f9;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+/* ===== NEWS ITEM (обновлено) ===== */
+.news-item {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;  /* было 14px, стало 10px */
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  align-items: flex-start;
+}
+
+.news-item:hover {
+  opacity: 0.7;
+}
+
+.news-item:last-child {
+  border-bottom: none;
+}
+
+.news-icon-img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.news-text {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.news-time {
+  font-size: 12px;
+  color: #aaa;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* ===== GLOBAL FONT FIX ===== */
+input, button, textarea, select {
+  font-family: 'Manrope', sans-serif;
+}
+
+/* ===== MESSAGE TEXT FORMATTING ===== */
+.message-paragraph {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #1a1a1a;
+}
+
+.message-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.message-paragraph.empty-answer {
+  color: #999;
+  font-style: italic;
+}
+
+/* Белый текст для пользовательских сообщений */
+.message-paragraph.user-text {
+  color: #fff;
+}
+
+/* Выделение цифр и процентов */
+.message-highlight {
+  color:#1a1a1a;
+  font-weight: 700;
+}
+
+/* Жирные ключевые фразы */
+.message-bold {
+  font-weight: 700;
+  color: #1a1a1a;
+}
