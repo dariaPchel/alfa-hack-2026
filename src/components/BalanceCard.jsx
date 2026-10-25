@@ -1,9 +1,8 @@
 export default function BalanceCard({ label, value, sub }) {
-  // Убираем символ ₽ из value если он там есть, добавим сами
   const cleanValue = value.replace('₽', '').trim();
   const parts = cleanValue.split(',');
-  const mainPart = parts[0]; // "10 500 872"
-  const decimalPart = parts.length > 1 ? ',' + parts[1] : ''; // ",50"
+  const mainPart = parts[0];
+  const decimalPart = parts.length > 1 ? ',' + parts[1] : '';
 
   return (
     <div className="balance-card">

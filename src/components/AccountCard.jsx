@@ -1,9 +1,8 @@
 export default function AccountCard({ amount, type, color }) {
-  // Разбиваем сумму: "800 872,50 ₽" → ["800 872", ",50 ₽"]
   const cleanAmount = amount.replace('₽', '').trim();
   const parts = cleanAmount.split(',');
-  const mainPart = parts[0]; // "800 872"
-  const decimalPart = parts.length > 1 ? ',' + parts[1] : ''; // ",50"
+  const mainPart = parts[0];
+  const decimalPart = parts.length > 1 ? ',' + parts[1] : '';
 
   return (
     <div className="account-card">

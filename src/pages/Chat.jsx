@@ -79,7 +79,6 @@ export default function Chat({ news, onClose }) {
           <ChatMessage key={i} message={msg} />
         ))}
 
-        {/* Подсказки — внутри chat-messages, сразу после последнего сообщения */}
         <div className="suggested-prompts">
           {suggestedPrompts.map((prompt, i) => (
             <button

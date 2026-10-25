@@ -1,7 +1,6 @@
 export default function ChatMessage({ message }) {
   const isUser = message.type === 'user';
 
-  // Разбиваем текст на абзацы
   const paragraphs = message.text
     ? message.text.split('\n\n').filter((p) => p.trim())
     : [];
@@ -45,8 +44,6 @@ function formatText(text) {
       part.toLowerCase().includes(phrase)
     );
 
-    // Выделяем ТОЛЬКО проценты и числа с десятичной частью (14%, 14,00%, 14.00%)
-    // НЕ выделяем годы (4-значные числа типа 2026)
     const isPercentage = /^\d+[,.]?\d*%$/.test(part);
     const isDecimalNumber = /^\d+[,.]\d{2}$/.test(part); // типа 14,00
     const isNumber = (isPercentage || isDecimalNumber) && !/^\d{4}$/.test(part);

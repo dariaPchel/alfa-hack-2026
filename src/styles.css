@@ -1,9 +1,7 @@
-/* ===== IMPORT FONT ===== */
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 :root {
   --menu-h: 56px;
 }
-/* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
@@ -21,7 +19,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ===== HEADER ===== */
 .app-header {
   display: flex;
   align-items: center;
@@ -44,38 +41,10 @@ body {
   flex-shrink: 0;
 }
 
-.company-selector {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 10px 14px;
-  cursor: pointer;
-  border: none;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  color: #1a1a1a;
-  transition: box-shadow 0.2s;
-}
-
-.company-selector:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-.company-selector-name {
-  flex: 1;
-  text-align: left;
-}
-
 .company-selector-arrow {
   color: #999;
   font-size: 12px;
 }
-
-/* ===== BALANCE ROW ===== */
 .balance-row {
   display: flex;
   gap: 12px;
@@ -157,7 +126,6 @@ body {
   margin-top: 6px;
   font-weight: 500;
 }
-/* ===== SECTION ===== */
 .section {
   padding: 0 20px;
   margin-bottom: 20px;
@@ -183,7 +151,6 @@ body {
   font-weight: 600;
 }
 
-/* ===== ACCOUNT CARD ===== */
 .account-card {
   display: flex;
   align-items: center;
@@ -239,24 +206,6 @@ body {
   flex-shrink: 0;
   object-fit: cover;
 }
-/* ===== NEWS ITEM ===== */
-.news-item {
-  display: flex;
-  gap: 12px;
-  padding: 14px 0;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  transition: opacity 0.15s;
-  align-items: flex-start;
-}
-
-.news-item:hover {
-  opacity: 0.7;
-}
-
-.news-item:last-child {
-  border-bottom: none;
-}
 
 .news-icon {
   width: 34px;
@@ -281,14 +230,6 @@ body {
   color: #fff;
 }
 
-.news-text {
-  flex: 1;
-  font-size: 14px;
-  line-height: 1.45;
-  color: #1a1a1a;
-  font-weight: 500;
-}
-
 .news-time {
   font-size: 12px;
   color: #aaa;
@@ -298,7 +239,6 @@ body {
   font-weight: 500;
 }
 
-/* ===== TASK CARD ===== */
 .task-card {
   display: flex;
   align-items: center;
@@ -346,8 +286,8 @@ body {
 .task-badge {
   width: 24px;
   height: 24px;
-  background: #fde8e8;  /* светло-розовый фон */
-  color: #ef3124;       /* красная цифра */
+  background: #fde8e8; 
+  color: #ef3124;       
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -357,30 +297,27 @@ body {
   flex-shrink: 0;
 }
 
-/* ===== DASHBOARD LAYOUT ===== */
 .dashboard {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  min-height: 100dvh;   /* корректно на мобильных браузерах */
+  min-height: 100dvh; 
 }
 
-/* ===== TASKS BLOCK ===== */
 .tasks-block {
-  flex: 1;              /* тянется до низа экрана, серых просветов нет */
+  flex: 1;             
   background: #fff;
   border-radius: 20px 20px 0 0;
   margin-top: 8px;
   padding: 20px 20px calc(var(--menu-h) + env(safe-area-inset-bottom) + 16px);
 }
 
-/* ===== BOTTOM MENU (фиксированное) ===== */
 .bottom-menu {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  margin: 0 auto;       /* центрирует при max-width */
+  margin: 0 auto;       
   width: 100%;
   max-width: 430px;
   height: calc(var(--menu-h) + env(safe-area-inset-bottom));
@@ -396,7 +333,6 @@ body {
   z-index: 100;
 }
 
-/* ===== CHAT SCREEN ===== */
 .chat-screen {
   display: flex;
   flex-direction: column;
@@ -405,7 +341,6 @@ body {
   font-family: 'Manrope', sans-serif;
 }
 
-/* ===== CHAT HEADER ===== */
 .chat-header {
   display: flex;
   align-items: center;
@@ -461,7 +396,6 @@ body {
   gap: 16px;
 }
 
-/* ===== MESSAGE BUBBLE ===== */
 .message-wrapper {
   display: flex;
   flex-direction: column;
@@ -496,7 +430,6 @@ body {
   border-bottom-left-radius: 4px;
 }
 
-/* Время и источник на одной строке */
 .message-meta-row {
   display: flex;
   align-items: center;
@@ -516,7 +449,6 @@ body {
   font-size: 11px;
   color: #aaa;
 }
-/* ===== SUGGESTED PROMPTS ===== */
 .suggested-prompts {
   display: flex;
   flex-direction: column;
@@ -545,7 +477,7 @@ body {
 .prompt-btn:hover {
   background: #333;
 }
-/* ===== TASKS BLOCK (единый белый блок) ===== */
+
 .tasks-block-title {
   font-size: 18px;
   font-weight: 800;
@@ -559,7 +491,7 @@ body {
   border-radius: 12px;
   padding: 16px 0;
 }
-/* ===== CHAT INPUT ===== */
+
 .chat-input-wrapper {
   padding: 12px 20px 20px;
   background: #fff;
@@ -571,7 +503,7 @@ body {
   background: #fff;
   border-radius: 28px;
   padding: 8px 8px 8px 16px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);  /* было 0.12, стало 0.18 + больше размытие */
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
   gap: 10px;
 }
 
@@ -641,14 +573,6 @@ body {
 
 .chat-send:hover {
   background: #d42a1f;
-}
-/* ===== HEADER (обновлено) ===== */
-.app-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px 12px;
-  background: #f0f0f3;
 }
 
 .company-logo-img {
@@ -725,11 +649,10 @@ body {
   border-bottom: none;
 }
 
-/* ===== NEWS ITEM (обновлено) ===== */
 .news-item {
   display: flex;
   gap: 12px;
-  padding: 8px 0;  /* было 14px, стало 10px */
+  padding: 8px 0;
   border-bottom: 1px solid #eee;
   cursor: pointer;
   transition: opacity 0.15s;
@@ -760,21 +683,10 @@ body {
   font-weight: 500;
 }
 
-.news-time {
-  font-size: 12px;
-  color: #aaa;
-  flex-shrink: 0;
-  align-self: flex-start;
-  margin-top: 2px;
-  font-weight: 500;
-}
-
-/* ===== GLOBAL FONT FIX ===== */
 input, button, textarea, select {
   font-family: 'Manrope', sans-serif;
 }
 
-/* ===== MESSAGE TEXT FORMATTING ===== */
 .message-paragraph {
   margin: 0 0 12px 0;
   font-size: 14px;
@@ -791,18 +703,15 @@ input, button, textarea, select {
   font-style: italic;
 }
 
-/* Белый текст для пользовательских сообщений */
 .message-paragraph.user-text {
   color: #fff;
 }
 
-/* Выделение цифр и процентов */
 .message-highlight {
   color:#1a1a1a;
   font-weight: 700;
 }
 
-/* Жирные ключевые фразы */
 .message-bold {
   font-weight: 700;
   color: #1a1a1a;
