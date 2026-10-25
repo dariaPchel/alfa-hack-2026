@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Новостная аналитика компаний</title>
+  <link rel="stylesheet" href="{{ url_for('news_analytics.static', filename='company_news.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div><p class="eyebrow">ALFA · COMPANY INTELLIGENCE</p><h1>Новостная аналитика</h1>
+        <p class="muted">Отраслевые события, влияние на компанию и планы действий</p></div>
+      <div class="status-pill"><span class="status-dot"></span><span id="service-status">Загрузка данных</span></div>
+    </header>
+
+    <section class="panel selector-panel">
+      <label for="company-select">Синтетический ID компании</label>
+      <div class="selector-row"><select id="company-select"><option value="">Выберите компанию</option></select>
+        <button id="refresh-button" class="secondary">Обновить новости</button></div>
+      <div id="company-summary" class="summary-grid"></div>
+      <p id="data-provenance" class="provenance"></p>
+    </section>
+
+    <section class="panel feed-panel">
+      <div class="feed-heading"><div><p class="eyebrow">НОВОСТНАЯ ЛЕНТА</p><h2>Сигналы по компании</h2></div>
+        <span id="feed-updated" class="muted"></span></div>
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-window="90d">90 дней <span>до 20</span></button>
+        <button class="tab" data-window="7d">7 дней <span>до 20</span></button>
+        <button class="tab" data-window="24h">Сегодня <span>до 10</span></button>
+      </div>
+      <div id="feed-warning" class="warning hidden"></div>
+      <div id="event-list" class="event-list"><div class="empty">Выберите компанию, чтобы загрузить новости.</div></div>
+    </section>
+    <section id="detail-panel" class="panel detail-panel hidden">
+      <div class="feed-heading"><div><p class="eyebrow">АНАЛИЗ СОБЫТИЯ</p><h2 id="detail-title"></h2></div>
+        <button id="analyze-button">Сформировать анализ</button></div>
+      <div id="detail-content"></div>
+    </section>
+    <footer>Данные аналогов не являются фактами о выбранной синтетической компании. Процентные оценки — сценарные диапазоны.</footer>
+  </main>
+  <script src="{{ url_for('news_analytics.static', filename='company_news.js') }}" defer></script>
+</body>
+</html>
