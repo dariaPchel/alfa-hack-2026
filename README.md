@@ -1,6 +1,6 @@
 # alfa-hack-2026
 
-Новостная аналитика для принятия бизнес-решений. Контур: React/Nginx → Go API → PostgreSQL/Redis; задачи анализа через транзакционный outbox попадают в Kafka → отдельный Go analysis worker. Отдельный Go news worker собирает новости. Старый Python/Flask/AG2 контур в Compose не используется.
+Новостная аналитика для принятия бизнес-решений. Контур: React/Nginx → Go API → PostgreSQL/Redis; задачи анализа через транзакционный outbox попадают в Kafka → отдельный Go analysis worker. Отдельный Go news worker собирает новости.
 
 ## Быстрый запуск без ключей
 
