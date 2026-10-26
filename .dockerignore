@@ -1,0 +1,17 @@
+# Supplied datasets and PDF research are bind mounted at runtime.
+docs/
+data/
+.git/
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+logs/
+*.log
+**/__pycache__/
+**/*.pyc
+company_news_pipeline/data/
+company_news_pipeline/docs/
+company_news_pipeline/templates/
+company_news_pipeline/static/

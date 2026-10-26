@@ -1,0 +1,187 @@
+{
+  "schema_version": "1.0",
+  "request_id": "req_20261025_0001",
+  "synthetic_id": "SYN_00042",
+  "generated_at": "2026-10-25T12:00:00Z",
+  "model": {
+    "provider": "routerai",
+    "requested_alias": "~z-ai/glm-flash-latest",
+    "resolved_model": null
+  },
+  "windows": {
+    "90d": {
+      "updated_at": "2026-10-25T06:00:00Z",
+      "returned_count": 20
+    },
+    "7d": {
+      "updated_at": "2026-10-25T06:00:00Z",
+      "returned_count": 12
+    },
+    "24h": {
+      "updated_at": "2026-10-25T11:58:00Z",
+      "returned_count": 4
+    }
+  },
+  "peer_basis": {
+    "synthetic_peer_count": 8,
+    "rusprofile_analogue_count": 6,
+    "features_used": [
+      "okved",
+      "legal_form",
+      "region",
+      "revenue_band",
+      "employee_band"
+    ],
+    "warnings": []
+  },
+  "industry_signals": [
+    {
+      "signal_type": "court_activity",
+      "period": "90d",
+      "description": "Рост числа найденных публикаций о судебных разбирательствах в отрасли",
+      "count": 7,
+      "confidence": "medium",
+      "source_ids": ["src_101", "src_102"]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "src_101",
+      "source_type": "news",
+      "title": "Пример публикации об изменении стоимости сырья",
+      "url": "https://example.org/news/101",
+      "published_at": "2026-10-24T09:00:00Z",
+      "retrieved_at": "2026-10-25T11:58:00Z"
+    },
+    {
+      "source_id": "src_201",
+      "source_type": "alfa_research",
+      "title": "Пример отраслевого обзора",
+      "url": "https://example.org/research/201",
+      "page": 14,
+      "knowledge_store": "alfa_research"
+    },
+    {
+      "source_id": "src_301",
+      "source_type": "risk_methodology",
+      "title": "Пример методического материала",
+      "url": "https://example.org/methodology/301",
+      "page": 8,
+      "knowledge_store": "risk_methodology"
+    }
+  ],
+  "bank_view": {
+    "summary": "В отраслевом обзоре отмечено возможное давление стоимости сырья на маржинальность.",
+    "citations": ["src_201"]
+  },
+  "risk_method_used": {
+    "summary": "Сравнены сценарии влияния и варианты действий с учётом неопределённости.",
+    "references": ["src_301"]
+  },
+  "ai_analysis": {
+    "summary": "Для компании вероятно увеличение операционных расходов; оценка экстраполирована по аналогам.",
+    "overall_signal": "risk"
+  },
+  "events": [
+    {
+      "event_id": "evt_20261025_001",
+      "title": "Пример новости о возможном росте стоимости сырья",
+      "summary": "Поставщики отрасли сообщили об изменении цен на сырьё.",
+      "event_type": "industry",
+      "event_date": "2026-10-24",
+      "source_ids": ["src_101"],
+      "relevance": {
+        "explanation": "Профиль компании указывает на зависимость от закупок сырья.",
+        "matched_features": ["okved", "payment_industry_exposure"]
+      },
+      "impact": {
+        "impact_type": "risk",
+        "severity": "medium",
+        "likelihood": "medium",
+        "confidence": "low",
+        "rationale": "У целевой компании нет точных данных о себестоимости; диапазон оценён по похожим компаниям.",
+        "horizon": {
+          "label": "ближайшие 3 месяца",
+          "start": "2026-10-25",
+          "end": "2027-01-25"
+        },
+        "business_metric_impacts": [
+          {
+            "metric": "операционные расходы",
+            "direction": "increase",
+            "change_pct": {
+              "min": 2,
+              "max": 6
+            },
+            "period": "3 months",
+            "baseline_basis": "медиана 6 Rusprofile-аналогов",
+            "analogue_count": 6,
+            "assumptions": [
+              "Аналоговый диапазон, а не причинный прогноз",
+              "Структура закупок целевой компании сопоставима с аналогами"
+            ],
+            "source_ids": ["src_101", "src_201"]
+          }
+        ]
+      },
+      "solutions": [
+        {
+          "solution_id": "sol_001",
+          "action": "Проверить альтернативных поставщиков и согласовать цены на квартал",
+          "comparison": "относительно сценария без действия",
+
+          "rationale": "Действие может снизить зависимость от краткосрочного роста цен.",
+          "expected_change_pct": [
+            {
+              "metric": "операционные расходы",
+              "direction": "decrease",
+              "change_pct": {
+                "min": 1,
+                "max": 3
+              },
+              "period": "3 months",
+              "baseline_basis": "сценарная оценка по аналогам",
+              "analogue_count": 6
+            }
+          ],
+          "horizon": {
+            "label": "1–3 месяца",
+            "start": "2026-10-25",
+            "end": "2027-01-25"
+          },
+          "confidence": "low",
+          "assumptions": [
+            "Есть доступные альтернативные поставщики"
+          ],
+          "costs_and_side_effects": [
+            "Затраты времени на проверку и согласование поставщиков"
+          ],
+          "conditions": [
+            "Сравнить итоговую стоимость с учётом логистики и качества"
+          ],
+          "source_ids": ["src_101", "src_201"]
+        }
+      ],
+      "warnings": [
+        "Оценка основана на аналогах; фактические показатели компании отсутствуют."
+      ]
+    }
+  ],
+  "analysis_trace": {
+    "roles_completed": [
+      "Company Context / Peer Analyst",
+      "News & Legal Researcher",
+      "Impact Analyst",
+      "Bank Research Analyst",
+      "Risk Methodology Analyst",
+      "Action Analyst",
+      "Critic / Source Checker"
+    ],
+    "profile_version": "mock-import-001",
+    "model_alias": "~z-ai/glm-flash-latest",
+    "chain_of_thought_included": false
+  },
+  "warnings": [
+    "Числа в примере иллюстративные, это не прогноз для компании."
+  ]
+}

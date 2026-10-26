@@ -1,12 +1,11 @@
 export default function NewsItem({ news, onClick }) {
-  const iconSrc =
-    news.icon === 'cb' ? '/centralbank.png' : '/ria%20news.png';
-
   return (
-    <div className="news-item" onClick={() => onClick(news)}>
-      <img src={iconSrc} alt="icon" className="news-icon-img" />
-      <div className="news-text">{news.text}</div>
+    <button type="button" className="news-item" onClick={() => onClick(news)}>
+      {news.icon === 'cb'
+        ? <img src="/centralbank.png" alt="Банк России" className="news-icon-img" />
+        : <span className="news-generic-icon" aria-hidden="true">Н</span>}
+      <div className="news-text">{news.title || news.text}<small className="news-source-name">{news.source}</small></div>
       <div className="news-time">{news.time}</div>
-    </div>
+    </button>
   );
 }

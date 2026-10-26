@@ -19,6 +19,23 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.app-state,
+.api-status {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 18px 20px;
+  font-size: 13px;
+  background: #fff;
+  color: #555;
+}
+
+.api-status {
+  border-bottom: 1px solid #eee;
+  color: #8a5b00;
+  background: #fff8e6;
+}
+
 .app-header {
   display: flex;
   align-items: center;
@@ -716,3 +733,28 @@ input, button, textarea, select {
   font-weight: 700;
   color: #1a1a1a;
 }
+
+.message-citations { display: flex; flex-direction: column; gap: 4px; padding: 8px 16px; font-size: 12px; }
+.message-citations a { color: #b90030; text-decoration: underline; }
+.news-period { color: #777; font-size: 13px; }
+
+.analysis-feedback { display: flex; gap: 8px; align-items: center; padding: 12px 16px; font-size: 13px; }
+.analysis-feedback button { border: 1px solid #bbb; border-radius: 8px; padding: 4px 10px; background: white; color: #222; cursor: pointer; }
+.analysis-trace { padding: 8px 16px; font-size: 12px; }
+.analysis-trace ol { padding-left: 20px; }
+
+.check-analysis { margin: 8px 16px; border: 1px solid #ccc; border-radius: 8px; background: #fff; padding: 8px; color: #222; cursor: pointer; }
+
+button.news-item { width: 100%; border: 0; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+
+.news-generic-icon { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex-shrink: 0; border-radius: 8px; background: #eee; color: #333; font-weight: 700; }
+
+.company-search { display: flex; gap: 4px; padding: 8px; }
+.company-search input { min-width: 0; flex: 1; }
+.company-search button { cursor: pointer; }
+
+.news-refresh-button { border: 0; background: transparent; color: #b90030; cursor: pointer; font-size: 13px; }
+.news-refresh-button:disabled { opacity: .5; cursor: wait; }
+
+.news-source-name { display: block; color: #777; font-size: 11px; margin-top: 3px; }
+.news-freshness { margin: 0 0 8px; font-size: 12px; color: #777; }

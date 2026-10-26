@@ -19,6 +19,22 @@ export default function ChatMessage({ message }) {
         )}
       </div>
 
+      {message.citations?.length > 0 && (
+        <div className="message-citations">
+          <strong>Источники:</strong>
+          {message.citations.map((citation, index) => (
+            <a key={index} href={citation.url} target="_blank" rel="noopener noreferrer">
+              {citation.title || citation.source || citation.url}
+            </a>
+          ))}
+        </div>
+      )}
+      {message.trace?.length > 0 && (
+        <details className="analysis-trace">
+          <summary>Как получен вывод</summary>
+          <ol>{message.trace.map((step, index) => <li key={index}>{step}</li>)}</ol>
+        </details>
+      )}
       <div className="message-meta-row">
         <span className="message-time">{message.time}</span>
         {message.source && (

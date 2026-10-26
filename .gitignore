@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Generated local bank research extraction
+/data/alfa_research.jsonl
+
+# Local credentials
+.env
+.env.*
+!.env.example
+
+# Supplied local hackathon datasets and research PDFs
+docs/*.csv
+docs/*.pdf

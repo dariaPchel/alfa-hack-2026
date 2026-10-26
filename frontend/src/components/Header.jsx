@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { companies } from '../data/mockCompanies.js';
 
-export default function Header() {
+export default function Header({ companies, selected, onSelect, onSearch }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState(companies[0]);
+  const [query, setQuery] = useState('');
 
   return (
     <header className="app-header">
@@ -18,7 +17,7 @@ export default function Header() {
           className="company-selector"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span className="company-selector-name">{selected.name}</span>
+          <span className="company-selector-name">{selected?.name || 'Компания'}</span>
           <img
             src="/pointer%20down.png"
             alt="dropdown"
@@ -28,12 +27,16 @@ export default function Header() {
 
         {isOpen && (
           <div className="dropdown-menu">
+            <form className="company-search" onSubmit={(event) => { event.preventDefault(); onSearch(query); }}>
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="ID, отрасль или регион" aria-label="Поиск компании" />
+              <button type="submit">Найти</button>
+            </form>
             {companies.map((company) => (
               <div
                 key={company.id}
                 className="dropdown-item"
                 onClick={() => {
-                  setSelected(company);
+                  onSelect(company);
                   setIsOpen(false);
                 }}
               >

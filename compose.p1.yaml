@@ -1,0 +1,152 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: alfa
+      POSTGRES_USER: alfa
+      POSTGRES_PASSWORD: alfa
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alfa -d alfa"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes: [p1-postgres:/var/lib/postgresql/data]
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  kafka:
+    image: apache/kafka:3.8.0
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+
+  importer:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["-mode", "import-companies"]
+    environment:
+      DATABASE_URL: postgres://alfa:alfa@postgres:5432/alfa?sslmode=disable
+      COMPANIES_CSV: /data/companies.csv
+      COMPANY_LINKS_CSV: /data/links.csv
+      COMPANY_PAYMENTS_CSV: /data/payments.csv
+      DATASET_KIND: ${DATASET_KIND:-synthetic}
+      DEMO_SEED: "false"
+    volumes:
+      - ${COMPANIES_CSV_PATH:-./company_news_pipeline/data/mock/df_Uid_data_hack.csv}:/data/companies.csv:ro
+      - ${COMPANY_LINKS_CSV_PATH:-./company_news_pipeline/data/mock/df_Fid_Uid_link_hack.csv}:/data/links.csv:ro
+      - ${COMPANY_PAYMENTS_CSV_PATH:-./company_news_pipeline/data/mock/df_Uid_payment_hack.csv}:/data/payments.csv:ro
+    depends_on:
+      postgres: {condition: service_healthy}
+
+  research-exporter:
+    profiles: ["research"]
+    build:
+      context: .
+      dockerfile: research/Dockerfile
+    command: ["--source-dir", "/docs", "--manifest", "/app/sources.json", "--output", "/data/alfa_research.jsonl"]
+    volumes:
+      - ./docs:/docs:ro
+      - research-data:/data
+
+  research-importer:
+    profiles: ["research"]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["-mode", "import-research"]
+    environment:
+      DATABASE_URL: postgres://alfa:alfa@postgres:5432/alfa?sslmode=disable
+      BANK_RESEARCH_JSONL: /data/alfa_research.jsonl
+    volumes:
+      - research-data:/data:ro
+    depends_on:
+      postgres: {condition: service_healthy}
+      research-exporter: {condition: service_completed_successfully}
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["-mode", "api"]
+    environment: &backend-env
+      DATABASE_URL: postgres://alfa:alfa@postgres:5432/alfa?sslmode=disable
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      KAFKA_REQUEST_TOPIC: analysis.requested
+      KAFKA_COMPLETED_TOPIC: analysis.completed
+      KAFKA_DEAD_TOPIC: analysis.failed
+      DEMO_SEED: "${DEMO_SEED:-true}"
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      kafka: {condition: service_healthy}
+      importer: {condition: service_completed_successfully}
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["-mode", "worker"]
+    environment:
+      <<: *backend-env
+      LLM_BASE_URL: ${LLM_BASE_URL:-https://routerai.ru/api/v1}
+      LLM_MODEL: ${LLM_MODEL:-}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_RESERVED_RUB_PER_CALL: ${LLM_RESERVED_RUB_PER_CALL:-}
+      LLM_MAX_RUB_PER_DAY: ${LLM_MAX_RUB_PER_DAY:-500}
+    restart: unless-stopped
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      kafka: {condition: service_healthy}
+      importer: {condition: service_completed_successfully}
+
+  news-worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["-mode", "news-worker"]
+    environment:
+      <<: *backend-env
+      SERPER_API_KEY: ${SERPER_API_KEY:-}
+      NEWS_REFRESH_INTERVAL: ${NEWS_REFRESH_INTERVAL:-6h}
+      NEWS_COMPANY_IDS: ${NEWS_COMPANY_IDS:-}
+    restart: unless-stopped
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      importer: {condition: service_completed_successfully}
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports: ["${FRONTEND_PORT:-5173}:80"]
+    depends_on:
+      api: {condition: service_started}
+
+volumes:
+  research-data:
+  p1-postgres:
