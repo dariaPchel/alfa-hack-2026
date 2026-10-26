@@ -48,7 +48,7 @@ type NewsItem struct {
 	Category      string   `json:"category"`
 	Relevance     int      `json:"relevance"`
 	Impact        string   `json:"impact"`
-	FullText      string   `json:"fullText"`
+	FullText      string   `json:"fullText,omitempty"`
 	BankAnalysis  string   `json:"bankAnalysis"`
 	Risks         []string `json:"risks"`
 	Opportunities []string `json:"opportunities"`
@@ -124,6 +124,15 @@ func (a *API) companyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	companyID := parts[0]
+	exists, err := a.store.CompanyExists(r.Context(), companyID)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "storage_error", err.Error())
+		return
+	}
+	if !exists {
+		writeError(w, http.StatusNotFound, "company_not_found", "company was not found")
+		return
+	}
 	if len(parts) == 2 && parts[1] == "news" && r.Method == http.MethodGet {
 		a.newsList(w, r, companyID)
 		return
@@ -380,6 +389,16 @@ func main() {
 			log.Fatal(err)
 		}
 		log.Printf("imported %d bank research fragments", count)
+		return
+	}
+	if *mode == "backfill-news" {
+		backfillCtx, stopBackfill := context.WithTimeout(context.Background(), 30*time.Minute)
+		defer stopBackfill()
+		count, err := refreshNews(backfillCtx, store)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("news backfill saved %d items", count)
 		return
 	}
 	if *mode == "news-worker" {

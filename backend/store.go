@@ -422,7 +422,7 @@ func (s *Store) CompanyExists(ctx context.Context, companyID string) (bool, erro
 		return false, nil
 	}
 	var exists bool
-	err := s.db.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM companies WHERE id=$1)`, companyID).Scan(&exists)
+	err := s.db.QueryRowContext(ctx, `SELECT EXISTS(SELECT 1 FROM companies WHERE id=$1 AND ($2 OR coalesce(payload->>'datasetKind','')<>'demo'))`, companyID, envBool("DEMO_SEED", false)).Scan(&exists)
 	return exists, err
 }
 
@@ -643,19 +643,24 @@ func (s *Store) QualityMetrics(ctx context.Context) (map[string]int, error) {
 	}
 	var complete, failed, pending, news, useful, notUseful int
 	err := s.db.QueryRowContext(ctx, `SELECT
-      count(*) FILTER(WHERE status='complete'),
-      count(*) FILTER(WHERE status='failed'),
-      count(*) FILTER(WHERE status IN ('queued','running'))
-      FROM analysis_jobs`).Scan(&complete, &failed, &pending)
+      count(*) FILTER(WHERE j.status='complete'),
+      count(*) FILTER(WHERE j.status='failed'),
+      count(*) FILTER(WHERE j.status IN ('queued','running'))
+      FROM analysis_jobs j JOIN companies c ON c.id=j.company_id
+      WHERE coalesce(c.payload->>'datasetKind','')<>'demo'`).Scan(&complete, &failed, &pending)
 	if err != nil {
 		return nil, err
 	}
-	err = s.db.QueryRowContext(ctx, `SELECT count(*) FROM news_items`).Scan(&news)
+	err = s.db.QueryRowContext(ctx, `SELECT count(*) FROM news_items n JOIN companies c ON c.id=n.company_id
+      WHERE coalesce(c.payload->>'datasetKind','')<>'demo'`).Scan(&news)
 	if err != nil {
 		return nil, err
 	}
-	err = s.db.QueryRowContext(ctx, `SELECT count(*) FILTER(WHERE rating='useful'),
-      count(*) FILTER(WHERE rating='not_useful') FROM analysis_feedback`).Scan(&useful, &notUseful)
+	err = s.db.QueryRowContext(ctx, `SELECT count(*) FILTER(WHERE f.rating='useful'),
+      count(*) FILTER(WHERE f.rating='not_useful')
+      FROM analysis_feedback f JOIN analysis_jobs j ON j.id=f.analysis_id
+      JOIN companies c ON c.id=j.company_id
+      WHERE coalesce(c.payload->>'datasetKind','')<>'demo'`).Scan(&useful, &notUseful)
 	if err != nil {
 		return nil, err
 	}

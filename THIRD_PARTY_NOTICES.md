@@ -14,11 +14,24 @@ module LICENSE files and npm lockfile.
 - Tesseract OCR and Poppler tools are installed from Debian packages in the
   optional research exporter. Review their package notices when distributing
   that image.
-- PyMuPDF 1.28.2 belongs to the legacy Python pipeline and is not installed
-  in the main Compose services.
 
 Runtime container images: postgres:16-alpine, redis:7-alpine,
 apache/kafka:3.8.0, golang:1.22-alpine, node:22-alpine,
 nginx:1.27-alpine and gcr.io/distroless/static-debian12:nonroot.
 Review the image vendor notices for the exact pulled digests before
 distribution. No container image is vendored into this repository.
+
+External services and supplied datasets:
+
+- RouterAI API provides the allowlisted GLM Flash model for analysis. Requests
+  may incur token charges; the application reserves a configurable per-call
+  amount and enforces a 500 RUB/day local budget.
+- Serper News API supplies dated article links and short search snippets.
+- The anonymized CSV files and nine Alpha Bank research PDFs under `docs/` were
+  supplied for this hackathon. They are not redistributable; avoid committing
+  customer datasets or credentials.
+- `company_news_pipeline/data/mock/` contains generated synthetic CSV fallback
+  data. Demo company U001 and its sample news are simulated, not real customers
+  or externally sourced publications.
+- There is no live Alpha-Business authentication or production banking
+  integration in this prototype.

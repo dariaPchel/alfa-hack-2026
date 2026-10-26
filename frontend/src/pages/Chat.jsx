@@ -11,7 +11,7 @@ const suggestedPrompts = [
 
 const initialMessages = (news) => [
   { type: 'user', text: `Новость: ${news?.title || 'выбранное событие'}`, time: 'сейчас' },
-  { type: 'bot', text: news?.text || 'Данные новости недоступны.', source: news?.source || 'Источник не указан', citations: news?.url ? [{ title: news.title, url: news.url }] : [], time: 'сейчас' },
+  { type: 'bot', text: news?.text ? (news.url ? 'Фрагмент из поисковой выдачи: ' : 'Демонстрационная новость: ') + news.text : 'Данные новости недоступны.', source: news?.source || 'Источник не указан', citations: news?.url ? [{ title: news.title, url: news.url }] : [], time: 'сейчас' },
 ];
 
 export default function Chat({ companyId, news, onClose }) {
@@ -32,8 +32,8 @@ export default function Chat({ companyId, news, onClose }) {
 
     const botMsg = {
       type: 'bot',
-      text: 'Запускаю анализ в Go API…',
-      source: 'Go API / Kafka worker',
+      text: 'Анализирую...',
+      source: 'Аналитика',
       time: 'сейчас',
     };
 
@@ -54,11 +54,11 @@ export default function Chat({ companyId, news, onClose }) {
         : analysis.status !== 'complete'
           ? 'Анализ ещё выполняется. Проверьте результат позже.'
           : [`Позиция банка: ${analysis.bank_view}`, `Анализ для компании: ${analysis.ai_analysis}`, analysis.solutions?.length ? `Что можно сделать: ${analysis.solutions.join('; ')}` : ''].filter(Boolean).join('\n\n');
-      setMessages((prev) => [...prev.slice(0, -1), { type: 'bot', text: responseText || 'Анализ не содержит проверенного результата.', source: analysis.provenance || 'Go API', citations: analysis.citations || [], trace: analysis.trace || [], time: 'сейчас' }]);
+      setMessages((prev) => [...prev.slice(0, -1), { type: 'bot', text: responseText || 'Анализ не содержит проверенного результата.', source: analysis.provenance === 'go-worker-demo' ? 'Демонстрационный ответ' : 'Аналитика', citations: analysis.citations || [], trace: analysis.trace || [], time: 'сейчас' }]);
       if (analysis.status === 'complete') setCompletedId(accepted.analysis_id);
       if (!['complete', 'failed'].includes(analysis.status)) setPendingId(accepted.analysis_id);
     } catch (requestError) {
-      setMessages((prev) => [...prev.slice(0, -1), { type: 'bot', text: `Не удалось выполнить анализ: ${requestError.message}`, source: 'Ошибка API', time: 'сейчас' }]);
+      setMessages((prev) => [...prev.slice(0, -1), { type: 'bot', text: `Не удалось выполнить анализ: ${requestError.message}`, source: 'Сервис анализа', time: 'сейчас' }]);
     }
   };
 
@@ -101,7 +101,7 @@ export default function Chat({ companyId, news, onClose }) {
                 : [`Позиция банка: ${analysis.bank_view}`, `Анализ для компании: ${analysis.ai_analysis}`,
                   analysis.solutions?.length ? `Что можно сделать: ${analysis.solutions.join('; ')}` : ''].filter(Boolean).join('\n\n');
               setMessages((prev) => [...prev.slice(0, -1), {
-                type: 'bot', text: resultText, source: analysis.provenance || 'Go API',
+                type: 'bot', text: resultText, source: analysis.provenance === 'go-worker-demo' ? 'Демонстрационный ответ' : 'Аналитика',
                 citations: analysis.citations || [], trace: analysis.trace || [], time: 'сейчас',
               }]);
               if (analysis.status === 'complete') setCompletedId(pendingId);

@@ -15,7 +15,7 @@ export default function ChatMessage({ message }) {
             </p>
           ))
         ) : (
-          <p className="message-paragraph empty-answer">(Ответ)</p>
+          <p className="message-paragraph empty-answer">Текст ответа отсутствует.</p>
         )}
       </div>
 

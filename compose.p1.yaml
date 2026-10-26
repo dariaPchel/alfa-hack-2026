@@ -112,10 +112,8 @@ services:
     environment:
       <<: *backend-env
       LLM_BASE_URL: ${LLM_BASE_URL:-https://routerai.ru/api/v1}
-      LLM_MODEL: ${LLM_MODEL:-}
+      LLM_MODEL: ${LLM_MODEL:-~z-ai/glm-flash-latest}
       LLM_API_KEY: ${LLM_API_KEY:-}
-      LLM_RESERVED_RUB_PER_CALL: ${LLM_RESERVED_RUB_PER_CALL:-}
-      LLM_MAX_RUB_PER_DAY: ${LLM_MAX_RUB_PER_DAY:-500}
     restart: unless-stopped
     depends_on:
       postgres: {condition: service_healthy}

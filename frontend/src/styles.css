@@ -524,19 +524,6 @@ body {
   gap: 10px;
 }
 
-.chat-input-skrepka {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  opacity: 0.5;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.chat-input-skrepka:hover {
-  opacity: 0.8;
-}
-
 .chat-input {
   flex: 1;
   border: none;
@@ -758,3 +745,48 @@ button.news-item { width: 100%; border: 0; text-align: left; font: inherit; colo
 
 .news-source-name { display: block; color: #777; font-size: 11px; margin-top: 3px; }
 .news-freshness { margin: 0 0 8px; font-size: 12px; color: #777; }
+
+/* Data-backed dashboard keeps the original mobile banking layout. */
+.profile-hero {
+  margin: 4px 20px 22px;
+  padding: 18px 18px 15px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+}
+.profile-hero-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.profile-eyebrow { font-size: 12px; font-weight: 700; color: #777; }
+.data-badge { border-radius: 100px; padding: 5px 9px; background: #ececf0; color: #555; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.data-badge.demo { background: #fff0ee; color: #cf261d; }
+.profile-hero h1 { font-size: 20px; line-height: 1.3; margin-top: 12px; font-weight: 800; overflow-wrap: anywhere; }
+.profile-detail { font-size: 13px; color: #626269; line-height: 1.45; margin-top: 5px; }
+.profile-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 15px; margin-top: 16px; border-top: 1px solid #f0f0f0; }
+.profile-metrics div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.profile-metrics span { font-size: 11px; color: #777; }
+.profile-metrics strong { font-size: 14px; line-height: 1.35; overflow-wrap: anywhere; }
+.profile-caption { margin-top: 14px; color: #777; font-size: 11px; line-height: 1.5; }
+.company-facts { margin-bottom: 26px; }
+.fact-card { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid #dedee2; }
+.fact-icon { display: flex; align-items: center; justify-content: center; flex: 0 0 34px; height: 34px; border-radius: 10px; background: #ef3124; color: #fff; font-size: 21px; font-weight: 700; }
+.fact-icon.secondary { background: #24242a; font-size: 20px; }
+.fact-copy { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.fact-copy strong { font-size: 14px; line-height: 1.35; }
+.fact-copy small { font-size: 11px; line-height: 1.35; color: #777; }
+.fact-value { max-width: 105px; text-align: right; font-size: 13px; font-weight: 800; overflow-wrap: anywhere; }
+.products-note { font-size: 11px; line-height: 1.5; color: #777; margin-top: 10px; }
+.news-section { margin-bottom: 0; }
+.news-heading { gap: 12px; margin-bottom: 3px; }
+.news-heading .section-title { line-height: 1.25; }
+.news-context { font-size: 11px; color: #777; margin-bottom: 12px; }
+.news-alert { font-size: 12px; line-height: 1.5; color: #a13c13; margin-bottom: 10px; }
+.news-empty { padding: 18px; background: #fff; border-radius: 16px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.news-empty-icon { width: 32px; height: 32px; border-radius: 10px; background: #fff1ef; display: grid; place-items: center; color: #e33125; font-size: 19px; }
+.news-empty strong { font-size: 14px; }
+.news-empty p { font-size: 12px; line-height: 1.5; color: #666; }
+.news-empty button { margin-top: 5px; padding: 9px 12px; border: 0; border-radius: 9px; background: #ef3124; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; }
+.tasks-block { margin-top: 22px; }
+.tasks-explainer { font-size: 13px; line-height: 1.5; color: #666; }
+.dropdown-menu { width: min(330px, calc(100vw - 85px)); max-width: none; max-height: min(360px, 65vh); overflow-y: auto; }
+.dropdown-item { overflow-wrap: anywhere; }
+.company-selector-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dropdown-item { display: block; width: 100%; border: 0; background: #fff; text-align: left; } .dropdown-empty { padding: 12px 14px; color: #777; font-size: 13px; }

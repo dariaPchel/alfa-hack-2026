@@ -8,14 +8,10 @@ export default function ChatInput({ value, onChange, onSend }) {
   return (
     <div className="chat-input-wrapper">
       <div className="chat-input-box">
-        <img
-          src="/skrepka.png"
-          alt="Прикрепить"
-          className="chat-input-skrepka"
-        />
+
         <input
           className="chat-input"
-          placeholder="Уточнить детали...."
+          placeholder="Задайте вопрос о новости"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}

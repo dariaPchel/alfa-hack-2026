@@ -1,4 +1,0 @@
-# Dependencies used only by the company-news pipeline.
-chromadb==1.5.9
-PyMuPDF==1.28.2
-gunicorn==26.2.0

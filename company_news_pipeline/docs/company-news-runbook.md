@@ -1,21 +1,13 @@
 # Company news analytics: local and Docker runbook
 
+> The active implementation is the Go stack in the repository root. The older Python/Flask instructions below are historical and are not used by `compose.p1.yaml`. For current startup steps, use the root README. The Go worker calls RouterAI using the runtime's ordinary route, sends `max_tokens=32000`, and has no internal LLM request-count or spend cap.
 ## Configuration
 
-1. From the repository root, copy `company_news_pipeline/.env.example` to `.env` and set the RouterAI, Serper, and optional Tavily keys. Keep `.env` local.
-2. Install the project dependencies from `requirements.txt`. The project uses the RouterAI model alias `~z-ai/glm-flash-latest` at `https://routerai.ru/api/v1`; the application rejects a missing RouterAI key and does not select a fallback model.
-3. Set `ROUTERAI_API_KEY` and the RouterAI egress route. The app uses `intfloat/multilingual-e5-large` through RouterAI's `/api/v1/embeddings`; no local model download is needed. PDF excerpts and methodology notes are sent to the embedding provider for vectorization. Embedding usage shares the 500 RUB/day RouterAI budget with chat inference.
-4. Create a Rusprofile session with `python save_rusprofile_session.py`, sign in manually in the visible browser, then close it to save `.local/rusprofile_storage_state.json`. The session file is ignored by Git.
+1. From the repository root, configure the root `.env` used by `compose.p1.yaml`; keep provider keys local and out of Git.
+2. Set `LLM_BASE_URL=https://routerai.ru/api/v1`, `LLM_MODEL=~z-ai/glm-flash-latest`, and `LLM_API_KEY`. The active Go worker sends `max_tokens=32000` and `reasoning.effort=low`, with the existing 50-second timeout and no application-level request or spend cap.
+3. Docker Desktop uses the host runtime's ordinary network route for RouterAI; no Wi-Fi-specific proxy is configured.
+4. `SERPER_API_KEY` is used by the separate Go news worker. No embedding service is required by the active Go stack.
 
-On Windows local runs, the RouterAI model config adds `/32` routes for the resolved RouterAI addresses through the active physical Wi-Fi interface in `ActiveStore`. It checks the selected interface before creating the model configuration. It never changes the machine's default route. If route installation/verification fails, inference fails closed.
-
-For Docker Desktop, run the host-only RouterAI egress proxy from an elevated PowerShell session after setting `ROUTERAI_PROXY_USER` and `ROUTERAI_PROXY_PASSWORD` in the host environment. Both API inference and the ingestion job use this proxy for chat and embedding requests:
-
-```powershell
-python -m news_analytics.wifi_egress_proxy
-```
-
-The proxy accepts only authenticated `CONNECT routerai.ru:443` traffic, binds outbound TCP to the Wi-Fi IPv4 address, and verifies the scoped destination route before connecting. Configure the Windows firewall so the proxy port `18128` is reachable from Docker Desktop only. Set `ROUTERAI_EGRESS_PROXY` in `.env` to `http://user:password@host.docker.internal:18128`; URL-encode special characters in the credentials. Do not expose the proxy port to the public internet.
 
 ## Data and indexing
 
@@ -58,7 +50,7 @@ The analysis controller uses bounded AutoGen roles, stores a concise trace witho
 
 ## Docker Desktop
 
-Place the supplied Alpha PDFs in `data/alfa_research`, configure `.env` including the host Wi-Fi proxy, then start the persistent services from the repository root:
+Place the supplied Alpha PDFs in `data/alfa_research`, configure `.env` with the RouterAI and Serper keys, then start the persistent services from the repository root:
 
 ```powershell
 docker compose --project-directory . --env-file .env -f company_news_pipeline/compose.yaml up -d chroma-alfa chroma-methodology
@@ -83,4 +75,4 @@ Persistent paths are Docker volumes `analytics-data`, `alfa-chroma`, and `method
 - The legacy Rusprofile parser currently returns its leading match per query; the adapter labels it as an analogue and warns that a real candidate cohort still requires a multi-result parser.
 - The local Drive folder refresh connector is not authenticated or implemented as an API sync. The supplied archive and its local hash manifest are usable; Drive refresh requires a credentialed connector.
 - Methodology notes are short original summaries; confirm their source pages and jurisdiction limits before relying on them, and replace them only with licensed or otherwise authorized texts.
-- Docker Desktop requires the host Wi-Fi egress proxy for RouterAI. Linux deployments need an equivalent host-bound proxy or platform-specific route implementation; direct fallback is not enabled.
+- RouterAI requests use the ordinary network route available to the host/Docker runtime; there is no Wi-Fi-specific proxy in the active Go stack.

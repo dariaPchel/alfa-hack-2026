@@ -6,5 +6,5 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python -m pip install --no-cache-dir pypdf==6.10.0
 WORKDIR /app
 COPY scripts/export_bank_research.py /app/export_bank_research.py
-COPY company_news_pipeline/news_analytics/knowledge/sources.json /app/sources.json
+COPY research/sources.json /app/sources.json
 ENTRYPOINT ["python", "/app/export_bank_research.py"]

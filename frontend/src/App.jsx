@@ -8,6 +8,7 @@ export default function App() {
   const selectedCompanyId = useRef(null);
   const [selectedNews, setSelectedNews] = useState(null);
   const [companies, setCompanies] = useState([]);
+  const [demoCompany, setDemoCompany] = useState(null);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [news, setNews] = useState([]);
   const [newsWindow, setNewsWindow] = useState('24h');
@@ -20,10 +21,21 @@ export default function App() {
     let cancelled = false;
     async function load() {
       try {
-        const loadedCompanies = await getCompanies();
-        const company = loadedCompanies[0];
+        const [loadedCompanies, demoMatches] = await Promise.all([getCompanies(), getCompanies('U001')]);
+        const demo = demoMatches.find((item) => item.id === 'U001' && item.datasetKind === 'demo') || null;
+        const company = demo || loadedCompanies[0];
+        const choices = demo ? [demo, ...loadedCompanies.filter((item) => item.id !== demo.id)] : loadedCompanies;
         const loadedNews = company ? await getCompanyNews(company.id) : { events: [], window: '24h' };
-        if (!cancelled) { setCompanies(loadedCompanies); setSelectedCompany(company); selectedCompanyId.current = company?.id || null; setNews(loadedNews.events); setNewsWindow(loadedNews.window); setRefresh(loadedNews.refresh); setUpdatedAt(loadedNews.updatedAt || ''); }
+        if (!cancelled) {
+          setCompanies(choices);
+          setDemoCompany(demo);
+          setSelectedCompany(company);
+          selectedCompanyId.current = company?.id || null;
+          setNews(loadedNews.events);
+          setNewsWindow(loadedNews.window);
+          setRefresh(loadedNews.refresh);
+          setUpdatedAt(loadedNews.updatedAt || '');
+        }
       } catch (requestError) {
         if (!cancelled) { setCompanies([]); setSelectedCompany(null); setNews([]); setError(requestError.message); }
       } finally {
@@ -35,15 +47,29 @@ export default function App() {
   }, []);
 
   const handleCompanySearch = async (query) => {
-    try { setCompanies(await getCompanies(query)); setError(''); }
-    catch (requestError) { setError(requestError.message); }
+    try {
+      const matches = await getCompanies(query);
+      setCompanies(demoCompany && !matches.some((item) => item.id === demoCompany.id)
+        ? [demoCompany, ...matches] : matches);
+      setError('');
+    } catch (requestError) { setError(requestError.message); }
   };
 
   const handleCompanyChange = async (company) => {
     setSelectedCompany(company);
     selectedCompanyId.current = company.id;
-    try { const result = await getCompanyNews(company.id); if (selectedCompanyId.current !== company.id) return; setNews(result.events); setNewsWindow(result.window); setRefresh(result.refresh); setUpdatedAt(result.updatedAt || ''); setError(''); }
-    catch (requestError) { setNews([]); setError(requestError.message); }
+    setNews([]);
+    setRefresh({});
+    setUpdatedAt('');
+    try {
+      const result = await getCompanyNews(company.id);
+      if (selectedCompanyId.current !== company.id) return;
+      setNews(result.events);
+      setNewsWindow(result.window);
+      setRefresh(result.refresh);
+      setUpdatedAt(result.updatedAt || '');
+      setError('');
+    } catch (requestError) { setNews([]); setError(requestError.message); }
   };
 
   const handleRefresh = async () => {
@@ -72,23 +98,15 @@ export default function App() {
     } catch (requestError) { setError(requestError.message); }
   };
 
-  const openChat = (news) => {
-    setSelectedNews(news);
-    setScreen('chat');
-  };
-
-  const closeChat = () => {
-    setScreen('dashboard');
-    setSelectedNews(null);
-  };
+  const openChat = (item) => { setSelectedNews(item); setScreen('chat'); };
+  const closeChat = () => { setScreen('dashboard'); setSelectedNews(null); };
 
   if (loading) return <div className="app-state">Загружаю данные компании…</div>;
 
   return (
     <>
       {error && <div className="api-status">Не удалось загрузить данные: {error}</div>}
-      {selectedCompany?.datasetKind && <div className="api-status">{selectedCompany.datasetKind === 'demo' ? 'Демонстрационные данные и шаблонный ответ.' : 'Обезличенные данные из ТЗ.'}</div>}
-      {screen === 'dashboard' && <Dashboard companies={companies} selectedCompany={selectedCompany} news={news} newsWindow={newsWindow} refresh={refresh} updatedAt={updatedAt} onRefresh={handleRefresh} onCompanyChange={handleCompanyChange} onCompanySearch={handleCompanySearch} onOpenChat={openChat} />}
+      {screen === 'dashboard' && <Dashboard companies={companies} selectedCompany={selectedCompany} demoCompany={demoCompany} news={news} newsWindow={newsWindow} refresh={refresh} updatedAt={updatedAt} onRefresh={handleRefresh} onCompanyChange={handleCompanyChange} onCompanySearch={handleCompanySearch} onOpenChat={openChat} />}
       {screen === 'chat' && <Chat companyId={selectedCompany?.id} news={selectedNews} onClose={closeChat} />}
     </>
   );

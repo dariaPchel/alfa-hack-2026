@@ -20,12 +20,46 @@ import (
 
 var relativeDate = regexp.MustCompile(`(?i)(\d+)\s*(minute|hour|day|week|month)s?\s*ago`)
 var russianRelativeDate = regexp.MustCompile(`(?i)(\d+)\s*(минут|час|дн|недел|месяц|год)`)
+var russianCalendarDate = regexp.MustCompile(`(?i)(\d{1,2})\s+([а-яё]+)\.?\s+(\d{4})`)
 
+func parseRussianCalendarDate(value string) (time.Time, bool) {
+	match := russianCalendarDate.FindStringSubmatch(strings.ToLower(value))
+	if len(match) != 4 {
+		return time.Time{}, false
+	}
+	months := map[string]time.Month{
+		"янв": time.January, "фев": time.February, "мар": time.March,
+		"апр": time.April, "мая": time.May, "май": time.May,
+		"июн": time.June, "июл": time.July, "авг": time.August,
+		"сен": time.September, "сент": time.September, "окт": time.October,
+		"ноя": time.November, "дек": time.December,
+	}
+	var month time.Month
+	for prefix, candidate := range months {
+		if strings.HasPrefix(match[2], prefix) {
+			month = candidate
+			break
+		}
+	}
+	if month == 0 {
+		return time.Time{}, false
+	}
+	day, _ := strconv.Atoi(match[1])
+	year, _ := strconv.Atoi(match[3])
+	parsed := time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
+	if parsed.Day() != day || parsed.Month() != month {
+		return time.Time{}, false
+	}
+	return parsed, true
+}
 func parseNewsDate(value string, now time.Time) (time.Time, bool) {
 	for _, layout := range []string{time.RFC3339, time.RFC1123Z, "2006-01-02", "Jan 2, 2006", "02.01.2006"} {
 		if parsed, err := time.Parse(layout, value); err == nil {
 			return parsed.UTC(), true
 		}
+	}
+	if parsed, ok := parseRussianCalendarDate(value); ok {
+		return parsed, true
 	}
 	match := relativeDate.FindStringSubmatch(value)
 	if len(match) == 3 {
@@ -88,8 +122,8 @@ type serperResponse struct {
 	News []serperItem `json:"news"`
 }
 
-func fetchSerper(ctx context.Context, key, query string) ([]serperItem, error) {
-	payload, _ := json.Marshal(map[string]any{"q": query, "num": 20, "tbs": "qdr:m3"})
+func fetchSerper(ctx context.Context, key, query, period string) ([]serperItem, error) {
+	payload, _ := json.Marshal(map[string]any{"q": query, "num": 20, "tbs": period, "gl": "ru", "hl": "ru"})
 	client := &http.Client{Timeout: 25 * time.Second}
 	for attempt := 1; attempt <= 3; attempt++ {
 		req, err := http.NewRequestWithContext(ctx, http.MethodPost, "https://google.serper.dev/news", bytes.NewReader(payload))
@@ -157,56 +191,100 @@ func refreshNews(ctx context.Context, s *Store) (int, error) {
 	return refreshCompanies(ctx, s, key, companies)
 }
 
+func newsQuery(company Company) string {
+	sector := strings.SplitN(company.OKVED, ".", 2)[0]
+	aliases := map[string]string{
+		"41": "строительство", "42": "строительство", "43": "строительство",
+		"46": "оптовая торговля", "47": "розничная торговля",
+		"52": "логистика грузоперевозки", "63": "обработка данных IT",
+		"68": "недвижимость", "69": "юридические услуги бухгалтерия",
+		"71": "инжиниринг строительство", "72": "научные исследования технологии",
+		"77": "автолизинг",
+	}
+	if alias := aliases[sector]; alias != "" {
+		return alias + " новости"
+	}
+	industry := strings.Fields(company.Industry)
+	if len(industry) > 3 {
+		industry = industry[:3]
+	}
+	return strings.Join(industry, " ") + " новости"
+}
+
 func refreshCompanies(ctx context.Context, s *Store, key string, companies []Company) (int, error) {
+	windows := []struct {
+		duration time.Duration
+		tbs      string
+	}{
+		{7 * 24 * time.Hour, "qdr:w"},
+		{90 * 24 * time.Hour, "qdr:m3"},
+	}
+	type searchResult struct {
+		items []serperItem
+		err   error
+	}
+	cache := map[string]searchResult{}
 	total := 0
 	var firstError error
 	for _, company := range companies {
 		if company.Industry == "" {
 			continue
 		}
-		query := company.Industry + " " + company.Region + " новости"
-		raw, err := fetchSerper(ctx, key, query)
-		if err != nil {
-			log.Printf("news refresh %s failed: %v", company.ID, err)
-			if firstError == nil {
-				firstError = err
-			}
-			continue
-		}
-		now := time.Now().UTC()
-		for _, candidate := range raw {
-			link := canonicalNewsURL(candidate.Link)
-			published, ok := parseNewsDate(candidate.Date, now)
-			if !ok || link == "" || candidate.Title == "" || published.After(now.Add(5*time.Minute)) || published.Before(now.AddDate(0, 0, -90)) {
-				continue
-			}
-			hash := sha256.Sum256([]byte(company.ID + "|" + link))
-			score := 0
-			for term := range words(company.Industry + " " + company.Region) {
-				if strings.Contains(strings.ToLower(candidate.Title+" "+candidate.Snippet), term) {
-					score += 20
+		query := newsQuery(company)
+		seen := map[string]bool{}
+		for _, window := range windows {
+			cacheKey := query + "|" + window.tbs
+			result, exists := cache[cacheKey]
+			if !exists {
+				result.items, result.err = fetchSerper(ctx, key, query, window.tbs)
+				cache[cacheKey] = result
+				if result.err != nil {
+					log.Printf("news search %q %s failed: %v", query, window.tbs, result.err)
+				} else {
+					log.Printf("news search %q %s returned %d items", query, window.tbs, len(result.items))
 				}
 			}
-			if score == 0 {
+			if result.err != nil {
+				if firstError == nil {
+					firstError = result.err
+				}
 				continue
 			}
-			if score > 100 {
-				score = 100
+			now := time.Now().UTC()
+			for _, candidate := range result.items {
+				link := canonicalNewsURL(candidate.Link)
+				published, ok := parseNewsDate(candidate.Date, now)
+				if !ok || link == "" || candidate.Title == "" || seen[link] || published.After(now.Add(5*time.Minute)) || published.Before(now.Add(-window.duration)) {
+					continue
+				}
+				score := 0
+				for term := range words(company.Industry + " " + company.Region + " " + query) {
+					if strings.Contains(strings.ToLower(candidate.Title+" "+candidate.Snippet), term) {
+						score += 20
+					}
+				}
+				if score == 0 {
+					continue
+				}
+				if score > 100 {
+					score = 100
+				}
+				hash := sha256.Sum256([]byte(company.ID + "|" + link))
+				item := NewsItem{
+					ID: fmt.Sprintf("news-%x", hash[:12]), Title: candidate.Title, Text: candidate.Snippet,
+					URL: link, PublishedAt: published.Format(time.RFC3339), RetrievedAt: now.Format(time.RFC3339),
+					Time: published.Format("02.01.2006"), Source: candidate.Source, Category: "industry", Relevance: score, Impact: "unknown",
+				}
+				if err := s.upsertNews(ctx, company.ID, item); err != nil {
+					return total, err
+				}
+				seen[link] = true
+				total++
 			}
-			item := NewsItem{
-				ID: fmt.Sprintf("news-%x", hash[:12]), Title: candidate.Title, Text: candidate.Snippet,
-				FullText: candidate.Snippet, URL: link, PublishedAt: published.Format(time.RFC3339), RetrievedAt: now.Format(time.RFC3339),
-				Time: published.Format("15:04"), Source: candidate.Source, Category: "industry", Relevance: score, Impact: "unknown",
-			}
-			if err := s.upsertNews(ctx, company.ID, item); err != nil {
-				return total, err
-			}
-			total++
 		}
 	}
 	return total, firstError
 }
-
 func runNewsWorker(ctx context.Context, s *Store) error {
 	interval := 6 * time.Hour
 	if raw := os.Getenv("NEWS_REFRESH_INTERVAL"); raw != "" {

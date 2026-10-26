@@ -116,7 +116,7 @@ def export(source_dir: Path, manifest_path: Path, output: Path) -> int:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source-dir", type=Path, required=True)
-    parser.add_argument("--manifest", type=Path, default=Path("company_news_pipeline/news_analytics/knowledge/sources.json"))
+    parser.add_argument("--manifest", type=Path, default=Path("research/sources.json"))
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     print(f"Exported {export(args.source_dir, args.manifest, args.output)} fragments")

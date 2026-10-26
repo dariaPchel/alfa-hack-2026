@@ -65,6 +65,16 @@ func TestRussianRelativeProviderDate(t *testing.T) {
 	}
 }
 
+func TestSerperRussianCalendarDateAndBroadQuery(t *testing.T) {
+	got, ok := parseNewsDate("10 авг. 2026 г.", time.Date(2026, 10, 26, 0, 0, 0, 0, time.UTC))
+	if !ok || got.Format("2006-01-02") != "2026-08-10" {
+		t.Fatalf("calendar date: %v %v", got, ok)
+	}
+	query := newsQuery(Company{OKVED: "46.90", Industry: "Торговля оптовая неспециализированная", Region: "Москва"})
+	if query != "оптовая торговля новости" {
+		t.Fatalf("news query too narrow: %q", query)
+	}
+}
 func TestSemicolonCSVWithQuotedFields(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "companies.csv")
 	content := "SYNTHETIC_U;MAINOKVED_NAME;CL_PRODUCT_RKO_MARK\nU_1;\"Торговля, услуги\";1.0\n"
